@@ -2,7 +2,7 @@
 
 | 脚本        | 功能                                        | 查看文档                                                     | 相关程序                                                  |
 | :---------- | ------------------------------------------- | ------------------------------------------------------------ | --------------------------------------------------------- |
-| gitspite.sh | 将大于100M的文件分割打包成tar方面上传github |                                                              |                                                           |
+| gitspite.sh | 将大于100M的文件分割打包成tar方便上传github |                                                              |                                                           |
 | mktmp.sh    | 创建自定义临时文件                          |                                                              |                                                           |
 | ocr.sh      | orc识别                                     | [一键OCR识别图片截图文字转文本](https://blog.csdn.net/weixin_39949673/article/details/111116693) | tesseract-ocr<br>imagemagick<br>gnome-screenshot<br>xclip |
 
