@@ -15,29 +15,29 @@ min_size="100M"
 # 分割大小
 spite_size="90m"
 
-find "$directory" -type f -size +$min_size | 
-while read file; do
-    # 排除指定的文件夹
-    for ex in "${exclude[@]}"; do
-        if echo "$file" | grep -q "$ex"; then
-            continue 2
-        fi
+find "$directory" -type f -size +$min_size |
+    while read -r file; do
+        # 排除指定的文件夹
+        for ex in "${exclude[@]}"; do
+            if echo "$file" | grep -q "$ex"; then
+                continue 2
+            fi
+        done
+        echo "change: $file"
+        # 文件所处的文件夹
+        dir=$(dirname "$file")
+        # 文件带后缀的全名，如file.txt
+        fileAllName=$(basename "$file")
+        # 文件不带后缀的名子，如file
+        filename=${fileAllName%.*}
+
+        cd "$dir" || exit
+        # 打包，产生file.tar
+        tar -cvf "$filename".tar "$file"
+        # 按照spite_size的大小分割，产生file001.tar、file002.tar...file00n.tar
+        split -b $spite_size -d --numeric-suffixes=1 --suffix-length=3 --additional-suffix=.tar "$filename".tar "$filename"
+        # 删除file.tar和源文件
+        rm "$filename".tar
+        rm "$fileAllName"
     done
-    echo "change: $file"
-    # 文件所处的文件夹
-    dir=$(dirname "$file")
-    # 文件带后缀的全名，如file.txt
-    fileAllName=$(basename "$file")
-    # 文件不带后缀的名子，如file
-    filename=${fileAllName%.*}
-    
-    cd $dir
-    echo "---$dir---$fileAllName---"
-    # 打包，产生file.tar
-    tar -cvf "$filename".tar "$file"
-    # 按照spite_size的大小分割，产生file001.tar、file002.tar...file00n.tar
-    split -b $spite_size= -d --numeric-suffixes=1 --suffix-length=3 --additional-suffix=.tar  "$filename".tar "$filename"
-    # 删除file.tar和源文件
-    rm "$filename".tar
-    rm "$fileAllName"
-done
+
